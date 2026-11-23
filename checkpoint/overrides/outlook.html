@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FloodSense Scenario & Impact Outlook</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/vendor/maplibre-gl.css">
+<link rel="stylesheet" href="/outlook.css">
+</head>
+<body>
+<header>
+  <div class="brand"><b>FloodSense</b><span>Scenario, location & impact outlook</span></div>
+  <nav><a href="/">Geographic Operations</a><a href="/weather.html">Weather & Basin</a><a class="active" href="/outlook.html">Scenario & Impact Outlook</a><a href="/time.html">Time & Events</a><a href="/history.html">Major Historical Events</a></nav>
+  <span id="state" class="pill">Loading</span>
+</header>
+<main>
+<section class="intro">
+  <div>
+    <small>VASHISHTI - CHIPLUN • DECISION SUPPORT</small>
+    <h1>Where could flooding occur over the next 72 hours?</h1>
+    <p>FloodSense shows the hydraulic envelope of physically simulated scenarios, then intersects that envelope with mapped settlements, roads, buildings and critical facilities. When live weather conditioning is unavailable or outside the frozen scenario library, the portal fails closed to an <b>unconditioned physical envelope</b>.</p>
+    <div id="cycleLine" class="cycleLine">Loading time semantics…</div>
+  </div>
+  <div class="truth"><b>Scientific boundary</b><span>The deterministic live weather → HMS/Q → hydraulic chain did not pass independent validation. +3 to +72 h therefore remains a scenario analogue/envelope, not an official deterministic warning. Scenario agreement is not calibrated probability.</span></div>
+</section>
+
+<section class="cards">
+  <article><small>OUTLOOK MODE</small><b id="mode">—</b><span id="source">—</span></article>
+  <article><small>NEXT 72 H RAIN</small><b id="rain72">—</b><span>Provider context only</span></article>
+  <article><small>2021 ANALOGUE 72 H</small><b id="ref72">—</b><span>Source-consistent reference window</span></article>
+  <article><small>SEVERITY RATIO</small><b id="ratio">—</b><span>Used only for scenario ranking</span></article>
+  <article><small>SCENARIOS SHOWN</small><b id="nsc">—</b><span>TRAIN + VAL only; TEST unread</span></article>
+  <article><small>WETNESS RANGE</small><b id="wet">—</b><span>Uncertainty dimension, not live soil mapping</span></article>
+</section>
+
+<section class="workspace">
+  <aside>
+    <div class="group"><small>LEAD TIME</small><div id="hours" class="buttons"></div><button id="playForecast" type="button" style="margin-top:8px;width:100%">▶ Play +3 → +72 h</button></div>
+    <div class="group"><small>MAP LAYER</small><select id="target"><option value="depth">Water depth</option><option value="flood">Scenario flood agreement</option><option value="wse">Water-surface elevation</option><option value="vmean">Mean flow speed</option><option value="vmax">Peak flow speed</option></select></div>
+    <div class="group" id="statGroup"><small>ENSEMBLE STATISTIC</small><select id="stat"><option value="median">Median</option><option value="p10">10th percentile (P10)</option><option value="p90">90th percentile (P90)</option><option value="max">High-end scenario</option></select></div>
+    <div class="legend"><b id="legendTitle">Water depth</b><div class="ramp"></div><span id="range">—</span></div>
+    <div class="summary"><small>HYDRAULIC SUMMARY</small><div id="summary">Loading…</div></div>
+    <div class="notice">Gray cells are unavailable, not dry. Scenario agreement counts only scenarios with a valid depth at that cell. It must not be described as flood probability.</div>
+  </aside>
+  <div id="map"></div>
+  <aside class="inspector">
+    <small>MAP INSPECTOR</small>
+    <h2 id="cellTitle">Click a model cell or asset</h2>
+    <div id="cell">The hydraulic timeline will show depth range, WSE, velocity and scenario agreement. Impact labels come from mapped geographic assets and are screening-level until authoritative GIS layers are bound.</div>
+  </aside>
+</section>
+
+<section id="impacts" class="impactSection">
+  <div class="impactHead">
+    <div><small>LOCATION & IMPACT INTELLIGENCE</small><h2>What places and assets could be affected?</h2><p>Top concerns are surfaced first, but the table remains a complete queryable inventory of all mapped affected features returned by the impact engine.</p></div>
+    <div class="impactState"><span id="impactSource" class="pill warn">Not loaded</span><button id="refreshImpact">Refresh map context</button><button id="exportImpact">Export affected CSV</button></div>
+  </div>
+  <div class="impactCards">
+    <article><small>AFFECTED FEATURES</small><b id="impactCount">—</b><span>depth &gt; 0.10 m screening threshold</span></article>
+    <article><small>ROADS / BRIDGES</small><b id="roadCount">—</b><span>research concern, not official closure</span></article>
+    <article><small>HEALTH / EMERGENCY</small><b id="healthCount">—</b><span>hospitals, clinics, police, fire, shelters</span></article>
+    <article><small>EDUCATION</small><b id="educationCount">—</b><span>schools, colleges, universities</span></article>
+    <article><small>BUILDINGS</small><b id="buildingCount">—</b><span>centroid screening until polygon intersection</span></article>
+    <article><small>OTHER CRITICAL</small><b id="criticalCount">—</b><span>government, utilities, markets, sports, rail, fuel</span></article>
+  </div>
+  <div class="impactGrid">
+    <section class="panel"><div class="panelHead"><div><small>PRIORITY REVIEW</small><h3>Top 10 affected locations/assets</h3></div></div><div id="top10" class="top10"><p>Loading impact context…</p></div></section>
+    <section class="panel inventory"><div class="panelHead"><div><small>COMPLETE AFFECTED INVENTORY</small><h3>All mapped affected features</h3></div><div class="filters"><select id="impactCategory"><option value="all">All categories</option></select><input id="impactSearch" placeholder="Search place, road, hospital, office…"></div></div><div id="inventoryNote" class="inventoryNote"></div><div class="tableWrap"><table><thead><tr><th>Feature</th><th>Category</th><th>Max depth</th><th>Median depth</th><th>Scenario agreement</th><th>Screening class</th></tr></thead><tbody id="impactRows"></tbody></table></div></section>
+  </div>
+  <div class="impactBoundary"><b>Impact semantics:</b> OpenStreetMap is operational geographic context, not an authoritative BISAG/state asset registry. Roads/buildings are screening intersections against nearby FloodSense cells. No official road closure, evacuation order or public warning is generated by this page.</div>
+</section>
+</main>
+<script type="module" src="/outlook.js"></script>
+<!-- FLOODSENSE_B1M2_R1R5_FREEZE_CONTRACT -->
+<script>
+(function(){
+'use strict';
+if(window.__FloodSenseB1M2R1R5Loaded)return;
+window.__FloodSenseB1M2R1R5Loaded=true;
+
+const BASE="http://127.0.0.1:25820", PAGE="outlook.html", EVENTS={"2021-07-22": "EV2021_JUL", "2022-07-12": "EV2022_JUL", "2023-07-19": "EV2023_JUL", "2024-07-14": "EV2024_JUL"}, KEY='floodsense_unified_date_v1';
+const EVENT_DATE_BY_YEAR={'2021':'2021-07-22','2022':'2022-07-12','2023':'2023-07-19','2024':'2024-07-14'};
+let unifiedGeoJSON=null, styleHooked=false, applying=false;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const E=(t,p)=>Object.assign(document.createElement(t),p||{});
+const norm=s=>String(s||'').replace(/\s+/g,' ').trim();
+const txt=e=>norm(e&&e.textContent);
+const all=()=>[...document.querySelectorAll('body *')];
+
+function qdate(){
+  const q=new URLSearchParams(location.search),v=q.get('udate')||q.get('historical')||q.get('date');
+  return(v&&/^\d{4}-\d{2}-\d{2}/.test(v))?v.slice(0,10):null;
+}
+function today(){return new Date().toISOString().slice(0,10)}
+function selected(){return qdate()||today()}
+function save(d){if(d)localStorage.setItem(KEY,d)}
+function exact(s){const q=norm(s).toLowerCase();return all().find(e=>txt(e).toLowerCase()===q)||null}
+function contains(s){const q=norm(s).toLowerCase();return all().filter(e=>txt(e).toLowerCase().includes(q))}
+function area(e){if(!e)return Infinity;const r=e.getBoundingClientRect();return Math.max(0,r.width)*Math.max(0,r.height)}
+function nearest(e,pred,max=12){
+  let n=e;
+  for(let i=0;i<max&&n&&n!==document.body;i++,n=n.parentElement){
+    try{if(pred(n,n.getBoundingClientRect()))return n}catch(_){}
+  }
+  return null;
+}
+function decorate(d){
+  const eventDates={'EV2021_JUL':'2021-07-22','EV2022_JUL':'2022-07-12','EV2023_JUL':'2023-07-19','EV2024_JUL':'2024-07-14'};
+  document.querySelectorAll('a[href]').forEach(a=>{
+    try{
+      const u=new URL(a.href,location.href);
+      if(u.origin!==location.origin)return;
+      if(!(u.pathname==='/'||/\.html$/i.test(u.pathname)))return;
+      const ev=u.searchParams.get('event');
+      if(u.pathname.endsWith('/history.html')&&eventDates[ev]){
+        u.searchParams.set('udate',eventDates[ev]);a.href=u.toString();return;
+      }
+      // Explicit URL dates remain authoritative; nav links never hijack page context.
+      if(a.closest('header,nav')||u.searchParams.has('udate'))return;
+      u.searchParams.set('udate',d);a.href=u.toString();
+    }catch(_){}
+  });
+}
+function label(r){
+  const t=r.trust||{};let s='<b>'+r.state+'</b>';
+  if(r.mode)s+=' · '+r.mode;
+  if(t.confidence_tier)s+=' · confidence '+t.confidence_tier;
+  if(t.hard_support!==undefined)s+=' · strict '+t.hard_support;
+  return s;
+}
+async function getj(url){
+  const x=await fetch(url,{cache:'no-store'}),o=await x.json();
+  if(!x.ok)throw new Error(o.message||o.error||('HTTP '+x.status));
+  return o;
+}
+async function route(d){return getj(BASE+'/api/v1/unified/date?date='+encodeURIComponent(d))}
+async function met(d){return getj(BASE+'/api/v1/unified/hydromet?date='+encodeURIComponent(d))}
+async function mapdata(d){return getj(BASE+'/api/v1/hybrid/map?date='+encodeURIComponent(d))}
+const goodnum=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v));
+const fmt=(v,u='')=>goodnum(v)?Number(v).toFixed(2)+u:'n/a';
+function syncUrl(d){
+  try{
+    const u=new URL(location.href);
+    u.searchParams.set('udate',d);
+    history.replaceState(null,'',u.pathname+'?'+u.searchParams.toString());
+  }catch(_){}
+}
+function headingNode(words){
+  const hs=[...document.querySelectorAll('h1,h2,h3,h4,[role="heading"]')];
+  return hs.find(e=>{const t=txt(e).toLowerCase();return words.every(w=>t.includes(w.toLowerCase()))})||null;
+}
+function nativeMain(words){
+  const h=headingNode(words); if(!h)return null;
+  const m=h.closest('main'); if(m&&!m.contains(bar))return m;
+  let n=h,best=null;
+  for(let i=0;i<14&&n&&n!==document.body;i++,n=n.parentElement){
+    const r=n.getBoundingClientRect();
+    if(!n.contains(bar)&&r.width>=600&&r.width<=1550&&r.height>=180&&r.height<=1800)best=n;
+  }
+  return best;
+}
+async function hideEventually(words,tag){
+  for(let i=0;i<45;i++){
+    const n=nativeMain(words);
+    if(n){hide(n,tag);return true}
+    await wait(100);
+  }
+  return false;
+}
+
+function hide(e,tag){
+  if(!e||e.dataset.r5Hidden==='1')return;
+  e.dataset.r5Hidden='1';e.dataset.r5Tag=tag||'generic';e.dataset.r5Display=e.style.display||'';
+  e.style.display='none';
+}
+function restore(tag){
+  document.querySelectorAll('[data-r5-hidden="1"]').forEach(e=>{
+    if(tag&&e.dataset.r5Tag!==tag)return;
+    e.style.display=e.dataset.r5Display||'';
+    delete e.dataset.r5Hidden;delete e.dataset.r5Tag;delete e.dataset.r5Display;
+  });
+}
+function remember(e){
+  if(e&&e.dataset.r5Html===undefined)e.dataset.r5Html=e.innerHTML;
+}
+function restoreRemembered(){
+  document.querySelectorAll('[data-r5-html]').forEach(e=>{
+    e.innerHTML=e.dataset.r5Html;delete e.dataset.r5Html;
+  });
+}
+function context(id,title,body){
+  let p=document.getElementById(id);
+  if(!p){
+    p=E('section');p.id=id;
+    p.style.cssText='margin:8px auto;padding:12px 16px;max-width:1060px;border:1px solid #94a3b8;border-radius:9px;background:#f8fafc;color:#0f172a;font:13px system-ui,sans-serif;box-shadow:0 1px 2px rgba(15,23,42,.05)';
+    bar.insertAdjacentElement('afterend',p);
+  }
+  p.innerHTML='<b>'+title+'</b><div style="margin-top:6px;line-height:1.45">'+body+'</div>';
+  return p;
+}
+function rm(id){const e=document.getElementById(id);if(e)e.remove()}
+
+function card(head){
+  const h=exact(head);if(!h)return null;
+  return nearest(h,(n,r)=>r.width>=105&&r.width<=470&&r.height>=42&&r.height<=250);
+}
+function setCard(head,value,note){
+  const c=card(head);if(!c)return false;
+  remember(c);
+  c.innerHTML='<div style="font-size:10px;font-weight:700;color:#64748b">'+head+'</div>'+
+              '<div style="font-size:17px;font-weight:800;margin-top:5px">'+value+'</div>'+
+              '<div style="font-size:10px;color:#64748b;margin-top:4px">'+note+'</div>';
+  return true;
+}
+function mainFromHeading(words){return nativeMain(words)}
+function commonAncestor(nodes){
+  nodes=nodes.filter(Boolean);if(!nodes.length)return null;
+  let a=nodes[0];
+  while(a&&a!==document.body){
+    if(nodes.every(n=>a.contains(n)))return a;
+    a=a.parentElement;
+  }
+  return null;
+}
+
+/* ---------------- authoritative state bar ---------------- */
+const bar=E('div');
+bar.id='floodsense-r5-statebar';
+bar.style.cssText='position:sticky;top:0;z-index:2147483000;background:#0f172a;color:#fff;padding:7px 10px;display:flex;gap:7px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18);font:12px system-ui,sans-serif';
+const title=E('b',{textContent:'Unified FloodSense time'});
+const input=E('input');input.type='date';input.value=selected();input.style.cssText='padding:4px 6px;border-radius:5px;border:1px solid #64748b';
+const resolveBtn=E('button',{textContent:'Resolve'});
+const applyBtn=E('button',{textContent:'Apply to this page'});
+const state=E('span',{textContent:'Resolving…'});
+const info=E('span');
+state.style.cssText='flex:1;min-width:250px';info.style.cssText='opacity:.85';
+[resolveBtn,applyBtn].forEach(b=>b.style.cssText='padding:4px 8px;border-radius:5px;border:0;cursor:pointer');
+bar.append(title,input,resolveBtn,applyBtn,state,info);
+const hdr=document.querySelector('header')||document.querySelector('nav')||document.body.firstElementChild;
+if(hdr&&hdr.parentElement)hdr.insertAdjacentElement('afterend',bar);else document.body.prepend(bar);
+
+async function resolveOnly(){
+  const d=input.value;save(d);syncUrl(d);decorate(d);
+  try{
+    const r=await route(d);state.innerHTML=label(r);info.textContent=r.message||'';return r;
+  }catch(e){state.textContent='Unified service unavailable: '+e.message;return null}
+}
+
+/* ---------------- root map ---------------- */
+function findMap(){return window.__FloodSenseMap&&typeof window.__FloodSenseMap.getStyle==='function'?window.__FloodSenseMap:null}
+function legacyIds(m){
+  const out=[];try{
+    for(const L of ((m.getStyle()||{}).layers||[])){
+      const k=((L.id||'')+' '+(L.source||'')).toLowerCase();
+      if(/depth|hydro|hydraulic|mesh|forecast|replay|flood|cell/.test(k)&&!/floodsense-unified/.test(k))out.push(L.id);
+    }
+  }catch(_){}
+  return out;
+}
+function hideLegacy(m){legacyIds(m).forEach(id=>{try{m.setLayoutProperty(id,'visibility','none')}catch(_){}})}
+function removeUnified(m){
+  try{if(m.getLayer('floodsense-unified-depth'))m.removeLayer('floodsense-unified-depth')}catch(_){}
+  try{if(m.getSource('floodsense-unified-cells'))m.removeSource('floodsense-unified-cells')}catch(_){}
+}
+async function waitMap(){
+  for(let i=0;i<100;i++){const m=findMap();if(m)return m;await wait(100)}
+  throw new Error('Native MapLibre map is not exposed');
+}
+async function waitStyle(m){
+  for(let i=0;i<80;i++){try{if((!m.isStyleLoaded||m.isStyleLoaded())&&m.getStyle())return}catch(_){}await wait(100)}
+  throw new Error('Map style did not become ready');
+}
+async function attachUnified(m){
+  await waitStyle(m);removeUnified(m);
+  m.addSource('floodsense-unified-cells',{type:'geojson',data:unifiedGeoJSON});
+  m.addLayer({id:'floodsense-unified-depth',type:'circle',source:'floodsense-unified-cells',
+    paint:{'circle-radius':['interpolate',['linear'],['get','depth_m'],.10,3,.5,4,2,5,5,6,8,7],
+           'circle-color':['interpolate',['linear'],['get','depth_m'],.10,'#2b83ba',.25,'#46d3c4',.75,'#abdda4',1.5,'#ffffbf',3,'#fdae61',5,'#d7191c'],
+           'circle-opacity':.92,'circle-stroke-width':.4,'circle-stroke-color':'#fff'}});
+  try{m.moveLayer('floodsense-unified-depth')}catch(_){}
+  try{m.triggerRepaint()}catch(_){}
+}
+async function renderMap(obj){
+  const m=await waitMap();hideLegacy(m);
+  const feats=(obj.cells||[]).filter(c=>goodnum(c.depth_m)&&Number(c.depth_m)>=.10&&goodnum(c.lon)&&goodnum(c.lat))
+    .map(c=>({type:'Feature',geometry:{type:'Point',coordinates:[Number(c.lon),Number(c.lat)]},
+             properties:{cell_id:c.cell_id,depth_m:Number(c.depth_m),p10:c.depth_p10_m,p90:c.depth_p90_m,wse:c.wse_m}}));
+  unifiedGeoJSON={type:'FeatureCollection',features:feats};
+  if(!styleHooked){styleHooked=true;m.on('styledata',()=>{if(unifiedGeoJSON&&!m.getLayer('floodsense-unified-depth'))setTimeout(()=>attachUnified(m).catch(()=>{}),70)})}
+  await attachUnified(m);
+  if(feats.length){
+    let a=Infinity,b=Infinity,c=-Infinity,d=-Infinity;
+    feats.forEach(f=>{const q=f.geometry.coordinates;a=Math.min(a,q[0]);b=Math.min(b,q[1]);c=Math.max(c,q[0]);d=Math.max(d,q[1])});
+    try{m.fitBounds([[a,b],[c,d]],{padding:65,duration:350})}catch(_){}
+  }
+  return feats.length;
+}
+async function clearMap(){
+  const m=await waitMap();unifiedGeoJSON=null;hideLegacy(m);removeUnified(m);try{m.triggerRepaint()}catch(_){}
+}
+function hideRootForecastChrome(){
+  restore('rootchrome');
+  const sels=[...document.querySelectorAll('select')].filter(s=>{
+    const r=s.getBoundingClientRect();return r.top<430&&r.left>innerWidth*.55;
+  });
+  const ca=commonAncestor(sels);
+  if(ca&&ca!==document.body){
+    const r=ca.getBoundingClientRect();
+    if(r.width<850&&r.height<240)hide(ca,'rootchrome');
+    else sels.forEach(s=>hide(nearest(s,(n,x)=>x.width<260&&x.height<100)||s,'rootchrome'));
+  }
+  const legends=contains('Water depth').filter(e=>{const r=e.getBoundingClientRect();return r.left>innerWidth*.60&&r.top>innerHeight*.55&&r.width>120&&r.width<380&&r.height<220}).sort((a,b)=>area(a)-area(b));
+  if(legends[0])hide(legends[0],'rootchrome');
+}
+function summaryFromMap(o){
+  const cells=o.cells||[];
+  const vals=cells.filter(c=>goodnum(c.depth_m)).map(c=>Number(c.depth_m));
+  const wet=vals.filter(v=>v>=.10).length;
+  const flood=vals.filter(v=>v>=.50).length;
+  const max=vals.length?Math.max(...vals):0;
+  const high=cells.filter(c=>goodnum(c.depth_p10_m)&&goodnum(c.depth_p90_m)&&(Number(c.depth_p90_m)-Number(c.depth_p10_m))>=.50).length;
+  const valid=goodnum(o.valid_depth_cells)?Number(o.valid_depth_cells):vals.length;
+  const invalid=goodnum(o.invalid_depth_cells)?Number(o.invalid_depth_cells):Math.max(0,cells.length-valid);
+  return {wet,flood,max,high,valid,invalid,total:cells.length};
+}
+async function rootHistorical(d,r){
+  hideRootForecastChrome();restoreRemembered();rm('floodsense-r5-root');
+  if(r.state==='REGISTERED_REPLAY'){
+    const ev=r.event_id||EVENTS[d];
+    location.replace('/history.html?event='+encodeURIComponent(ev||'')+'&udate='+encodeURIComponent(d));return;
+  }
+  if(['DRY_NO_MODELED_FLOOD','RAIN_OBSERVED_NO_MODELED_FLOOD','UNSUPPORTED_OOD','UNSUPPORTED_METEOROLOGY'].includes(r.state)){
+    await clearMap();
+    setCard('Maximum shown','0.000 m','selected '+d+' · no modeled flood');
+    setCard('High uncertainty','0','no hydraulic state rendered');
+    context('floodsense-r5-root','Selected-date hydraulic state · '+d,
+      '<b>'+r.state.replaceAll('_',' ')+'</b>. Hydraulic cells are intentionally absent. The short-horizon forecast-demo controls and stale forecast legend are hidden for this historical state.');
+    state.innerHTML=label(r)+' · <b>hydraulic overlay cleared</b>';return;
+  }
+  if(r.state==='SUPPORTED_RECONSTRUCTION'){
+    const o=await mapdata(d),n=await renderMap(o),s=summaryFromMap(o);
+    setCard('Maximum shown',s.max.toFixed(3)+' m','selected '+d+' reconstruction');
+    setCard('High uncertainty',String(s.high),'P90−P10 ≥ 0.50 m');
+    context('floodsense-r5-root','Selected-date reconstruction · '+d,
+      'Wet cells ≥0.10 m: <b>'+s.wet+'</b> · flood-emphasis cells ≥0.50 m: <b>'+s.flood+'</b> · max depth <b>'+s.max.toFixed(3)+' m</b> · valid <b>'+s.valid+'/'+s.total+'</b> · invalid <b>'+s.invalid+'</b>.'+
+      '<div style="height:8px;margin-top:8px;border-radius:5px;background:linear-gradient(90deg,#2b83ba,#46d3c4,#abdda4,#ffffbf,#fdae61,#d7191c)"></div>'+
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:#64748b"><span>0.10 m</span><span>selected-date water depth</span><span>'+s.max.toFixed(2)+' m</span></div>');
+    state.innerHTML=label(r)+' · <b>'+n+' wet cells visibly attached</b>';
+    info.textContent='display ≥0.10 m · invalid '+s.invalid+' · cache '+((o.cache||{}).hit?'HIT':'CREATED');return;
+  }
+}
+async function installReferencePanel(){
+  if(PAGE!=='index.html'||document.getElementById('floodsense-r5-reference'))return;
+  for(let k=0;k<80;k++){
+    const labelNode=all().find(e=>txt(e)==='REFERENCE DATE AND TIME');
+    if(labelNode){
+      let box=labelNode;
+      for(let i=0;i<12&&box&&box!==document.body;i++,box=box.parentElement){
+        const t=txt(box),r=box.getBoundingClientRect();
+        if(t.includes('Runtime Replay Available')&&r.width>280&&r.width<1000&&r.height>35&&r.height<260){
+          const d=E('details');d.id='floodsense-r5-reference';d.open=false;
+          d.style.cssText='margin:7px auto;padding:8px 11px;max-width:1060px;border:1px solid #cbd5e1;border-radius:8px;background:#fff';
+          const sm=E('summary',{textContent:'2021 benchmark short-horizon replay (+5…+60 min) — reference control'});
+          sm.style.cssText='font-weight:700;cursor:pointer';
+          box.style.cssText+=';position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;max-width:1020px!important;margin:8px 0!important;display:block!important;';
+          d.append(sm,box);bar.insertAdjacentElement('afterend',d);return;
+        }
+      }
+    }
+    await wait(100);
+  }
+  context('floodsense-r5-reference','2021 benchmark short-horizon replay',
+    'The accepted 2021 packaged replay remains the reference control. <a href="/history.html?event=EV2021_JUL&udate=2021-07-22">Open the 2021 registered historical replay</a>.');
+}
+
+/* ---------------- Weather: historical gets one clean authoritative view ---------------- */
+function restoreNativeMain(tag){
+  restore(tag);
+  rm('floodsense-r5-'+tag);
+}
+async function weatherHistorical(d,r){
+  const h=await met(d);
+  hideEventually(['hydro-meteorological','intelligence'],'weather-main').catch(()=>{});
+  const p=context('floodsense-r5-weather-main','Historical Weather & Basin · '+d,
+    '<div style="display:grid;grid-template-columns:repeat(4,minmax(145px,1fr));gap:10px;margin-top:8px">'+
+    metric('Past 24 hours',fmt(h.r24_mm,' mm'),'harmonized archive')+
+    metric('Past 72 hours',fmt(h.r72_mm,' mm'),'harmonized archive')+
+    metric('Past 7 days',fmt(h.r168_mm,' mm'),'harmonized archive')+
+    metric('Peak hourly rain',fmt(h.peak_hour_mm,' mm/h'),'selected-date context')+
+    metric('Surface soil moisture',fmt(h.surface_soil_m3m3),'m³/m³')+
+    metric('Root-zone soil moisture',fmt(h.root_soil_m3m3),'m³/m³')+
+    metric('Wetness',fmt(h.wetness_norm),'normalized [-1,+1]')+
+    metric('Source',norm(h.source||'archive'),'portal-primary / ERA5 gap-fill')+
+    '</div>'+
+    '<div style="margin-top:10px;color:#475569">This is the selected historical/reanalysis context. Current November forecast cards, forecast-hour chart and current API provenance are intentionally hidden in historical mode.</div>'+
+    '<div style="margin-top:9px"><a href="/?udate='+encodeURIComponent(d)+'">Open selected-date hydraulic reconstruction</a></div>');
+  p.style.maxWidth='1040px';
+  state.innerHTML=label(r)+' · <b>historical Weather view</b>';
+}
+function metric(k,v,n){return '<div style="border:1px solid #dbe3ee;border-radius:8px;background:#fff;padding:10px"><div style="font-size:10px;font-weight:700;color:#64748b">'+k+'</div><div style="font-size:18px;font-weight:800;margin-top:5px">'+v+'</div><div style="font-size:10px;color:#64748b;margin-top:4px">'+n+'</div></div>'}
+
+/* ---------------- Time: correct cards + one real 3960-day chart ---------------- */
+function hideNativeArchive(){
+  restore('time-archive');
+  const candidates=[];
+  const h1=exact('Daily basin rainfall context'),h2=exact('Harmonized daily basin rainfall context');
+  [h1,h2].filter(Boolean).forEach(h=>{const c=nearest(h,(n,r)=>r.width>300&&r.width<1000&&r.height>140&&r.height<650);if(c)candidates.push(c)});
+  contains('This archive is a meteorological screening context').forEach(e=>{const c=nearest(e,(n,r)=>r.width>300&&r.width<1000&&r.height>140&&r.height<650);if(c)candidates.push(c)});
+  [...new Set(candidates)].forEach(c=>hide(c,'time-archive'));
+}
+async function renderArchive(d){
+  hideNativeArchive();rm('floodsense-r5-time-archive');
+  const a=await getj(BASE+'/api/v1/unified/archive-series');
+  const panel=E('section');panel.id='floodsense-r5-time-archive';
+  panel.style.cssText='max-width:1060px;margin:10px auto;padding:12px 14px;background:#fff;border:1px solid #dbe3ee;border-radius:9px';
+  panel.innerHTML='<div><b>Harmonized daily basin rainfall context</b><span style="float:right;font-size:11px;color:#64748b">'+a.series[0].date+' → '+a.series[a.series.length-1].date+' · <b>'+a.days+' days</b></span></div>';
+  const cv=E('canvas');cv.width=1000;cv.height=220;cv.style.cssText='width:100%;height:220px;margin-top:8px';panel.append(cv);
+  const g=cv.getContext('2d'),vals=a.series.map(x=>Number.isFinite(Number(x.r24_mm))?Number(x.r24_mm):0),mx=Math.max(1,...vals);
+  g.strokeStyle='#cbd5e1';g.beginPath();g.moveTo(0,202);g.lineTo(cv.width,202);g.stroke();
+  g.fillStyle='#3b82f6';
+  for(let i=0;i<vals.length;i++){const x=i/(vals.length-1)*cv.width,h=Math.min(190,vals[i]/mx*190);g.fillRect(x,202-h,Math.max(1,cv.width/vals.length),h)}
+  const si=a.series.findIndex(x=>x.date===d);
+  if(si>=0){const x=si/(a.series.length-1)*cv.width;g.strokeStyle='#dc2626';g.lineWidth=2;g.beginPath();g.moveTo(x,3);g.lineTo(x,207);g.stroke()}
+  const foot=E('div');foot.style.cssText='font-size:11px;color:#64748b;margin-top:4px';foot.textContent='B1I-R2 harmonized archive · blue = 24 h rainfall · red = selected date';panel.append(foot);
+  const mh=exact('Major Historical Events');
+  const mbox=mh?nearest(mh,(n,r)=>r.width>650&&r.width<1300&&r.height>80&&r.height<300):null;
+  if(mbox)mbox.insertAdjacentElement('afterend',panel);
+  else{
+    const anchor=document.querySelector('main')||document.querySelector('body > div:not(#floodsense-r5-statebar)');
+    if(anchor&&anchor!==bar)anchor.insertAdjacentElement('beforebegin',panel);
+    else bar.insertAdjacentElement('afterend',panel);
+  }
+}
+function syncRegistryYear(d){
+  const y=d.slice(0,4);
+  const sels=[...document.querySelectorAll('select')].filter(s=>[...s.options].some(o=>norm(o.textContent)===y)&&[...s.options].some(o=>norm(o.textContent)==='2026'));
+  if(sels.length){const s=sels[sels.length-1];if(s.value!==y){s.value=y;s.dispatchEvent(new Event('change',{bubbles:true}))}}
+}
+function setHistoricalScenarioLink(d){
+  const nodes=all().filter(e=>/Open \+3 h scenario & impact map/i.test(txt(e)));
+  nodes.forEach(e=>{
+    if(e.tagName==='A'){e.textContent='Open selected-date hydraulic map';e.href='/?udate='+encodeURIComponent(d)}
+    else hide(nearest(e,(n,r)=>r.width>150&&r.width<1000&&r.height<100)||e,'time-future-link');
+  });
+}
+async function timeApply(d,r){
+  restoreRemembered();restore('time-future-link');
+  const input2=[...document.querySelectorAll('input[type="datetime-local"]')].find(x=>!x.closest('#floodsense-r5-statebar'));
+  if(input2){input2.value=d+'T12:00';input2.dispatchEvent(new Event('change',{bubbles:true}))}
+  let h=null;try{h=await met(d)}catch(_){}
+  if(r.mode==='HISTORICAL'||r.state==='REGISTERED_REPLAY'){
+    setCard('TIME MODE','HISTORICAL',d+' 12:00 local');
+    setCard('WEATHER','HISTORICAL_ARCHIVE',h?fmt(h.r24_mm,' mm')+' / 24 h · '+norm(h.source||'archive'):'selected-date archive');
+    if(r.state==='SUPPORTED_RECONSTRUCTION')setCard('HYDRAULIC STATE','Supported Reconstruction','12 h scenario-manifold state · not a minute replay');
+    else if(r.state==='DRY_NO_MODELED_FLOOD')setCard('HYDRAULIC STATE','Dry / No Modeled Flood','hydraulic overlay intentionally absent');
+    else if(r.state==='REGISTERED_REPLAY')setCard('HYDRAULIC STATE','Registered Replay','frozen event player is authoritative');
+    setCard('EVENT MATCH',r.state==='REGISTERED_REPLAY'?(r.event_id||EVENTS[d]||'Registered event'):'No registered event',r.state==='REGISTERED_REPLAY'?'frozen event registry match':'selected date is not a frozen event');
+    setHistoricalScenarioLink(d);syncRegistryYear(d);
+  }else if(r.state==='LIVE_FORECAST_DELEGATE'||r.mode==='LIVE_CURRENT'||r.mode==='FORECAST'){
+    setCard('TIME MODE','FORECAST','current/live routing');
+    setCard('WEATHER','CACHED_FRESH','current/live meteorology delegated to the native weather service');
+    setCard('HYDRAULIC STATE','Physical Scenario Outlook Available','use the +3 to +72 h physical scenario envelope');
+    setCard('EVENT MATCH','No registered event','current/live date');
+    syncRegistryYear(d);
+  }
+  await renderArchive(d);
+  context('floodsense-r5-time','Unified selected-time interpretation · '+d,
+    r.state==='SUPPORTED_RECONSTRUCTION'?'Supported 12 h scenario-manifold reconstruction; not a registered minute-by-minute replay.':
+    r.state==='REGISTERED_REPLAY'?'Frozen registered replay is authoritative for this event date.':
+    (r.message||r.state));
+  state.innerHTML=label(r)+' · <b>cards + single '+(await getj(BASE+'/api/v1/unified/archive-summary')).days+'-day archive synchronized</b>';
+}
+
+/* ---------------- History: one clean arbitrary-date page, registered events untouched ---------------- */
+function historyNative(){
+  return mainFromHeading(['Replay major historical flood-model events through time']);
+}
+function historyCards(){
+  const arr=[
+    ['2021','Peak Jul 22, 2021','calibration/reference','EV2021_JUL','2021-07-22'],
+    ['2022','Peak Jul 12, 2022','calibration/support','EV2022_JUL','2022-07-12'],
+    ['2023','Peak Jul 19, 2023','independent validation','EV2023_JUL','2023-07-19'],
+    ['2024','Peak Jul 14, 2024','independent validation','EV2024_JUL','2024-07-14']
+  ];
+  return '<div style="display:grid;grid-template-columns:repeat(4,minmax(170px,1fr));gap:10px;margin-top:12px">'+arr.map(x=>
+    '<a style="display:block;text-decoration:none;color:#0f172a;border:1px solid #cbd5e1;border-radius:9px;background:#fff;padding:12px" href="/history.html?event='+x[3]+'&udate='+x[4]+'">'+
+    '<div style="font-size:10px;color:#64748b">REGISTERED EVENT</div><b>'+x[0]+' historical replay</b><div style="margin-top:4px">'+x[1]+'</div><div style="font-size:11px;color:#64748b;margin-top:5px">'+x[2]+'</div></a>').join('')+'</div>';
+}
+async function historyApply(d,r){
+  if(r.state==='REGISTERED_REPLAY'){
+    restore('history-main');rm('floodsense-r5-history');
+    const ev=r.event_id||EVENTS[d];
+    const u=new URL(location.href);
+    if(u.searchParams.get('event')!==ev){
+      location.replace('/history.html?event='+encodeURIComponent(ev||'')+'&udate='+encodeURIComponent(d));return;
+    }
+    state.innerHTML=label(r);return;
+  }
+  hideEventually(['Replay major historical flood-model events through time'],'history-main').catch(()=>{});
+  const u=new URL(location.href);u.searchParams.delete('event');u.searchParams.set('udate',d);history.replaceState(null,'',u.pathname+'?'+u.searchParams.toString());
+  context('floodsense-r5-history','No registered historical event for '+d,
+    'This selected date is not one of the four frozen registered event replays. Its supported reconstruction belongs in Geographic Operations; this page does not fabricate a minute-by-minute historical player.'+
+    '<div style="margin-top:8px"><a href="/?udate='+encodeURIComponent(d)+'">Open selected-date Geographic Operations</a></div>'+historyCards());
+  state.innerHTML='<b>NO_REGISTERED_EVENT</b> · HISTORICAL · stable one-click state';
+}
+
+/* ---------------- Outlook: future-only page fully replaced for historical dates ---------------- */
+function outlookNative(){return mainFromHeading(['Where could flooding occur over the next 72 hours'])}
+async function outlookApply(d,r){
+  if(r.mode==='HISTORICAL'||r.state==='REGISTERED_REPLAY'){
+    hideEventually(['Where could flooding occur over the next 72 hours'],'outlook-main').catch(()=>{});
+    context('floodsense-r5-outlook','Historical date selected · '+d,
+      '<b>The +3 to +72 h Scenario & Impact Outlook is future-only.</b> No forecast scenario, forecast impact count, or future hydraulic map is presented as a '+d+' historical result.'+
+      '<div style="margin-top:8px"><a href="/?udate='+encodeURIComponent(d)+'">Open the selected-date hydraulic reconstruction</a></div>'+
+      '<div style="margin-top:6px;color:#64748b">Historical selected-date asset impacts are intentionally deferred to the B1M3 impact integration rather than copied from a future scenario.</div>');
+    state.innerHTML='<b>HISTORICAL_CONTEXT</b> · future outlook disabled';return;
+  }
+  restore('outlook-main');rm('floodsense-r5-outlook');state.innerHTML=label(r);
+}
+
+/* ---------------- Hindcast: never let a 2021 URL silently show 2022 ---------------- */
+function hindcastNative(){return mainFromHeading(['Compare FloodSense ML with the frozen historical hydraulic reconstruction'])}
+function hindcastEventSelect(){
+  return [...document.querySelectorAll('select')].find(s=>{
+    const t=[...s.options].map(o=>norm(o.textContent)).join(' ');
+    return /2022/.test(t)&&/2023/.test(t)&&/2024/.test(t);
+  })||null;
+}
+async function hindcastApply(d,r){
+  const y=d.slice(0,4),native=hindcastNative();
+  if(y==='2021'){
+    hideEventually(['Compare FloodSense ML with the frozen historical hydraulic reconstruction'],'hindcast-main').catch(()=>{});
+    context('floodsense-r5-hindcast','No H3 ML hindcast is authorized for the 2021 benchmark',
+      'The frozen H3 comparison contract is <b>2022 TRAIN/CALIBRATION → 2023/2024 locked independent evaluation</b>. A 2021 URL must therefore not silently display the 2022 hindcast.'+
+      '<div style="margin-top:8px"><a href="/history.html?event=EV2021_JUL&udate=2021-07-22">Open the authoritative 2021 historical replay</a></div>');
+    state.innerHTML='<b>NO_2021_H3_HINDCAST</b> · research contract preserved';return;
+  }
+  if(['2022','2023','2024'].includes(y)){
+    restore('hindcast-main');rm('floodsense-r5-hindcast');
+    const s=hindcastEventSelect();
+    if(s){
+      const opt=[...s.options].find(o=>norm(o.textContent).startsWith(y)||norm(o.textContent).includes(y));
+      if(opt&&s.value!==opt.value){s.value=opt.value;s.dispatchEvent(new Event('change',{bubbles:true}))}
+    }
+    state.innerHTML=label(r)+' · <b>H3 event year synchronized to '+y+'</b>';return;
+  }
+  hideEventually(['Compare FloodSense ML with the frozen historical hydraulic reconstruction'],'hindcast-main').catch(()=>{});
+  context('floodsense-r5-hindcast','No arbitrary-date H3 hindcast for '+d,
+    'H3 is intentionally limited to its frozen 2022/2023/2024 evaluation contract. FloodSense does not fabricate an ML hindcast for this arbitrary date.');
+}
+
+/* ---------------- apply / auto-apply ---------------- */
+async function apply(){
+  if(applying)return;
+  applying=true;
+  const d=input.value;save(d);syncUrl(d);decorate(d);
+  try{
+    const r=await route(d);state.innerHTML=label(r);info.textContent=r.message||'';
+    if(PAGE==='index.html')await rootHistorical(d,r);
+    else if(PAGE==='weather.html'){
+      if(r.mode==='HISTORICAL'||r.state==='REGISTERED_REPLAY')await weatherHistorical(d,r);
+      else{restoreNativeMain('weather-main');state.innerHTML=label(r)}
+    }
+    else if(PAGE==='time.html')await timeApply(d,r);
+    else if(PAGE==='history.html')await historyApply(d,r);
+    else if(PAGE==='outlook.html')await outlookApply(d,r);
+    else if(PAGE==='hindcast.html')await hindcastApply(d,r);
+  }catch(e){state.textContent='Apply error: '+e.message}
+  finally{applying=false}
+}
+resolveBtn.onclick=resolveOnly;
+applyBtn.onclick=apply;
+input.onchange=()=>{save(input.value);decorate(input.value)};
+decorate(input.value);
+resolveOnly();
+
+setTimeout(()=>{installReferencePanel().catch(()=>{});},700);
+/* URL-selected pages should be truthful without requiring a manual first click. */
+if(qdate()){
+  const initialDate=qdate();
+  setTimeout(()=>{if(input.value===initialDate)apply().catch(()=>{});},1200);
+}
+
+})();
+</script>
+<!-- /FLOODSENSE_B1M2_R1R5_FREEZE_CONTRACT --><!-- FLOODSENSE_B1M3_IMPACT_INTERACTION -->
+<script>
+/* FloodSense B1M3-R1R3 front-end integration; isolated candidate only. */
+(function () {
+ 'use strict';
+ if (window.__FloodSenseB1M3Loaded) return;
+ window.__FloodSenseB1M3Loaded=true;
+ const BASE="http://127.0.0.1:25820",PAGE="outlook.html",KEY='floodsense_unified_date_v1';
+ const $=s=>document.querySelector(s);
+ const el=(tag,attrs={})=>Object.assign(document.createElement(tag),attrs);
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const finite=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v));
+ const fmt=(v,n=2)=>finite(v)?Number(v).toFixed(n):'n/a';
+ const wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const localToday=()=>{let d=new Date(),n=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+n(d.getMonth()+1)+'-'+n(d.getDate())};
+ function selected(){const q=new URLSearchParams(location.search),d=q.get('udate')||q.get('historical')||q.get('date');return d&&/^\d{4}-\d{2}-\d{2}/.test(d)?d.slice(0,10):localStorage.getItem(KEY)||localToday()}
+ async function getj(u){const res=await fetch(u,{cache:'no-store'});const txt=await res.text();let data;try{data=JSON.parse(txt)}catch(_){throw Error('Unexpected non-JSON API response ('+res.status+')')};if(!res.ok)throw Error(data.error||data.message||'HTTP '+res.status);return data}
+ const route=d=>getj(BASE+'/api/v1/unified/date?date='+encodeURIComponent(d));
+ const impacts=d=>getj(BASE+'/api/v1/unified/impacts?date='+encodeURIComponent(d));
+ const map=()=>window.__FloodSenseMap&&typeof window.__FloodSenseMap.getStyle==='function'?window.__FloodSenseMap:null;
+ async function waitMap(){for(let i=0;i<100;i++){const m=map();if(m)return m;await wait(120)}throw Error('Native map not exposed')}
+ function rm(id){const x=document.getElementById(id);if(x)x.remove()}
+ function dock(){let p=$('#floodsense-b1m3-impact-panel');if(p)return p;const host=$('#app .body main');if(!host)throw Error('Root map container absent');p=el('aside');p.id='floodsense-b1m3-impact-panel';p.setAttribute('aria-label','Selected-date affected places');host.appendChild(p);return p}
+ function inspector(html){let p=$('#floodsense-b1m3-inspector');if(!p){p=el('div');p.id='floodsense-b1m3-inspector';const host=$('.b1m3-dock-body')||dock();host.prepend(p)}p.innerHTML='<button type="button" aria-label="Close inspection">×</button>'+html;p.querySelector('button').onclick=()=>p.remove();return p}
+ function badge(text){const labels=['CACHED_FRESH','UNCONDITIONED','REPLAY READY','ML READY','ARCHIVE READY','LIVE'];let options=[...document.querySelectorAll('.pill,.status span')].filter(e=>labels.includes((e.textContent||'').trim()));if(options.length)options[0].textContent=text}
+ const buckets={roads_bridges:'Roads / bridges',health_emergency:'Health / emergency',education:'Education',buildings:'Buildings',other_critical:'Other critical'};
+ function friendly(a){const s=String(a.name||'').trim();if(/^road\s+\d+$/i.test(s))return 'Mapped road · '+s.replace(/road\s+/i,'ID ');return s||'Mapped asset'}
+ let syncSerial=0,currentImpact=null,rootBound=null;
+ function impactRows(){const p=dock(),input=p.querySelector('#b1m3-search'),select=p.querySelector('#b1m3-filter'),list=p.querySelector('#b1m3-asset-list');if(!input||!select||!list)return;const q=input.value.toLowerCase(),cat=select.value;const rows=(currentImpact?.affected_assets||[]).map((a,i)=>({a,i})).filter(x=>(cat==='all'||x.a.bucket===cat)&&(!q||friendly(x.a).toLowerCase().includes(q)||String(x.a.category||'').toLowerCase().includes(q)||String(x.a.asset_id).includes(q)));list.innerHTML=rows.map(({a,i})=>'<button class="b1m3-asset-row" type="button" data-i="'+i+'"><span><b>'+esc(friendly(a))+'</b><small>'+esc(a.category||a.bucket)+' · nearest cell '+esc(a.nearest_cell_id)+'</small></span><span class="depth">'+fmt(a.depth_m)+' m</span></button>').join('')||'<p class="b1m3-sub">No matching affected locations for this date.</p>';list.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>focusAsset(Number(b.dataset.i)))}
+ function renderImpactPanel(d,x){currentImpact=x;window.__FloodSenseB1M3Impact=x;const p=dock();const c=x.category_counts||{};const num=k=>Number(c[k]||0);const count=Number(x.affected_asset_count||0);const cats=Object.keys(buckets).filter(k=>num(k)>0);p.innerHTML='<div class="b1m3-dock-head"><div><strong>Affected places · '+esc(d)+'</strong><div class="b1m3-sub">'+esc(x.state||'')+' · '+count+' / '+Number(x.asset_registry_count||0)+' registered assets</div></div><button class="b1m3-expand" type="button" id="b1m3-collapse">Hide list</button></div><div class="b1m3-dock-body"><div class="b1m3-dock-stats">'+[['Affected',count],['Roads / bridges',num('roads_bridges')],['Health',num('health_emergency')],['Buildings',num('buildings')],['Education',num('education')],['Other',num('other_critical')]].map(a=>'<div class="b1m3-dock-stat"><small>'+esc(a[0])+'</small><b>'+a[1]+'</b></div>').join('')+'</div><div class="b1m3-search"><input id="b1m3-search" aria-label="Search affected places" placeholder="Search affected places"/><select id="b1m3-filter" aria-label="Impact category"><option value="all">All categories</option>'+cats.map(k=>'<option value="'+k+'">'+esc(buckets[k])+'</option>').join('')+'</select></div><div id="b1m3-asset-list" class="b1m3-asset-list"></div><div class="b1m3-impact-disclaimer">Estimated depth at the nearest hydraulic cell centre, not an exact asset footprint intersection or official road closure. Date-specific supported model output only.</div></div>';
+ const body=p.querySelector('.b1m3-dock-body'),button=p.querySelector('#b1m3-collapse');button.onclick=()=>{body.hidden=!body.hidden;button.textContent=body.hidden?'Show list':'Hide list'};
+ p.querySelector('#b1m3-search').addEventListener('input',impactRows);p.querySelector('#b1m3-filter').addEventListener('change',impactRows);impactRows();return p}
+ function focusAsset(i){const a=currentImpact?.affected_assets?.[i],m=map();if(!a||!m)return;try{m.flyTo({center:[+a.longitude,+a.latitude],zoom:Math.max(13,m.getZoom()),duration:500})}catch(_){}inspector('<strong>'+esc(friendly(a))+'</strong><div>Type: '+esc(a.category||'asset')+'</div><div>Selected-date estimated depth: <b>'+fmt(a.depth_m)+' m</b></div><div>Nearest hydraulic cell: '+esc(a.nearest_cell_id)+'</div><div class="b1m3-sub">Approximate nearest-cell screening; physical asset extent and exact geometry not evaluated.</div>')}
+ function removeAssets(m){try{if(m.getLayer('floodsense-b1m3-assets'))m.removeLayer('floodsense-b1m3-assets')}catch(_){}try{if(m.getSource('floodsense-b1m3-assets'))m.removeSource('floodsense-b1m3-assets')}catch(_){}}
+ async function drawAssets(m,x){for(let i=0;i<70;i++){try{if(m.isStyleLoaded()&&m.getStyle())break}catch(_){}await wait(130)}removeAssets(m);const fs=(x.affected_assets||[]).map((a,i)=>({type:'Feature',geometry:{type:'Point',coordinates:[Number(a.longitude),Number(a.latitude)]},properties:{idx:i,asset_id:a.asset_id}})).filter(f=>f.geometry.coordinates.every(Number.isFinite));if(!fs.length)return;m.addSource('floodsense-b1m3-assets',{type:'geojson',data:{type:'FeatureCollection',features:fs}});m.addLayer({id:'floodsense-b1m3-assets',type:'circle',source:'floodsense-b1m3-assets',paint:{'circle-radius':['interpolate',['linear'],['zoom'],9,4,12,6,15,9],'circle-color':'#ea7b19','circle-stroke-color':'#fff','circle-stroke-width':1.3,'circle-opacity':.9}});try{m.moveLayer('floodsense-b1m3-assets')}catch(_){}}
+ function hideLegacyDry(m){try{for(const L of (m.getStyle()?.layers||[])){const key=((L.id||'')+' '+(L.source||'')).toLowerCase();if(/forecast|replay|depth|hydraulic|flood|cell/.test(key)&&!key.includes('floodsense-b1m3-assets')&&L.id!=='floodsense-unified-depth')m.setLayoutProperty(L.id,'visibility','none')}}catch(_){}}
+ function bindRootClicks(m){if(rootBound===m)return;rootBound=m;m.on('mousemove',e=>{try{const ids=['floodsense-b1m3-assets','floodsense-unified-depth'].filter(id=>m.getLayer(id));m.getCanvas().style.cursor=ids.length&&m.queryRenderedFeatures(e.point,{layers:ids}).length?'pointer':''}catch(_){}});m.on('click',e=>{try{const ids=['floodsense-b1m3-assets','floodsense-unified-depth'].filter(id=>m.getLayer(id));const fs=m.queryRenderedFeatures(e.point,{layers:ids});const a=fs.find(f=>f.layer.id==='floodsense-b1m3-assets');if(a){focusAsset(Number(a.properties.idx));return}const c=fs.find(f=>f.layer.id==='floodsense-unified-depth');if(!c)return;const p=c.properties||{},near=(currentImpact?.affected_assets||[]).filter(a=>String(a.nearest_cell_id)===String(p.cell_id));inspector('<strong>Hydraulic cell '+esc(p.cell_id)+'</strong><div>Selected-date depth: <b>'+fmt(p.depth_m)+' m</b></div><div>P10–P90: '+fmt(p.p10)+' – '+fmt(p.p90)+' m</div><div>WSE: '+fmt(p.wse)+' m</div><div>'+near.length+' mapped assets screened at this nearest cell</div>')}catch(err){console.warn('B1M3 root click',err)}})}
+ async function rootSync(token,d,r){if(PAGE!=='index.html')return;const m=await waitMap();if(token!==syncSerial)return;rm('floodsense-b1m3-inspector');if(r.state==='SUPPORTED_RECONSTRUCTION'){const x=await impacts(d);if(token!==syncSerial)return;let layer=false;for(let i=0;i<100;i++){try{if(m.getLayer('floodsense-unified-depth')){layer=true;break}}catch(_){}await wait(130)}if(token!==syncSerial)return;renderImpactPanel(d,x);if(!layer){const n=el('p',{textContent:'The native selected-date hydraulic layer is not ready. Do not validate this map until the unified-date toolbar succeeds.'});n.className='b1m3-impact-disclaimer';dock().appendChild(n)}await drawAssets(m,x);bindRootClicks(m);badge('HISTORICAL RECONSTRUCTION')}else{removeAssets(m);if(['DRY_NO_MODELED_FLOOD','RAIN_OBSERVED_NO_MODELED_FLOOD'].includes(r.state)){const x=await impacts(d);if(token!==syncSerial)return;renderImpactPanel(d,x);hideLegacyDry(m)}else{currentImpact=null;rm('floodsense-b1m3-impact-panel')}}}
+ function h3Hygiene(){/* Intentionally owned by native hindcast.js R1R3: no guessed MapLibre property. */}
+ function renderOutlookInspector(){const host=$('.inspector');if(!host)return;let p=$('#b1m3-r1r3-outlook-tip');if(!p){p=el('div');p.id='b1m3-r1r3-outlook-tip';p.className='b1m3-sub';p.style.marginTop='12px';p.textContent='Click colored hydraulic cells or mapped assets; use the impact inventory below to focus an asset. Scenario depth is conditional/ensemble information, not a deterministic forecast.';host.appendChild(p)}}
+ async function bindOutlook(d,r){if(PAGE!=='outlook.html')return;if(r.mode==='HISTORICAL'||r.state==='REGISTERED_REPLAY'){badge('HISTORICAL · FUTURE DISABLED');return}renderOutlookInspector() /* Native outlook.js already implements cell and asset clicks and synced inventory. Do not duplicate event listeners. */}
+ function showWarn(text){let p=$('#b1m3-r1r3-warn');if(!p){p=el('p');p.id='b1m3-r1r3-warn';p.style.cssText='padding:7px 10px;margin:5px auto;max-width:1040px;border:1px solid #e1bf85;background:#fff6e1;color:#644e1c;font:12px system-ui';$('#floodsense-r5-statebar')?.insertAdjacentElement('afterend',p)}p.textContent='B1M3 integration HOLD: '+text}
+ async function sync(){const token=++syncSerial,d=selected();try{const r=await route(d);if(token!==syncSerial)return;await rootSync(token,d,r);if(PAGE==='outlook.html')await bindOutlook(d,r)}catch(e){if(token===syncSerial)showWarn(e.message)}}
+ function arm(){const b=$('#floodsense-r5-statebar');if(b){const apply=[...b.querySelectorAll('button')].find(x=>/Apply to this page/i.test(x.textContent));if(apply)apply.addEventListener('click',()=>setTimeout(sync,600))}setTimeout(sync,750);setTimeout(sync,4200);}
+ arm();
+})();
+
+</script>
+<!-- /FLOODSENSE_B1M3_IMPACT_INTERACTION -->
+<script defer src="/fs-r1r10v3-route.js"></script>
+<script defer src="/fs-r1r10v3-hit.js"></script>
+</body></html>

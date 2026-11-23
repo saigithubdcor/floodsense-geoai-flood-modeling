@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>FloodSense V4.3 integration visual QA</title>
+<style>body{font:14px/1.55 system-ui;margin:25px auto;max-width:1100px;padding:0 20px;color:#1c3043}table{border-collapse:collapse;width:100%}th,td{padding:10px;border-bottom:1px solid #e1e7ef;vertical-align:top;text-align:left}th{background:#edf3fa}input{width:18px;height:18px}p{color:#52677a}a{color:#195c9a}mark{background:#fff2cf;padding:2px 6px}</style>
+<h1>FloodSense V4 — consolidated integration candidate</h1>
+<p><mark>Development candidate, not accepted.</mark> Compare against accepted R1R9 V2. The hydraulic science and V3.2 checkpoint are unchanged.</p>
+<p>For each test: open the live V4 page; verify the date in the browser address, data provenance, legend and map. Record failures with URL + one screenshot.</p>
+<table><tr><th>Done</th><th>Scope</th><th>Open live page</th><th>Expected</th></tr>
+<tr><td><input type="checkbox"></td><td>GeoOps wet</td><td><a href="/?udate=2016-06-04" target="_blank">4 June 2016</a></td><td>26 assets; Adaptive default; ranked impacts; focus and return</td></tr>
+<tr><td><input type="checkbox"></td><td>GeoOps second wet</td><td><a href="/?udate=2016-06-05" target="_blank">5 June 2016</a></td><td>30 screened assets, own date field</td></tr>
+<tr><td><input type="checkbox"></td><td>GeoOps dry</td><td><a href="/?udate=2016-01-01" target="_blank">1 January 2016</a></td><td>Zero affected, zero flood cells, no stale highlight</td></tr>
+<tr><td><input type="checkbox"></td><td>Recent past</td><td><a href="/?udate=2026-11-03" target="_blank">3 November 2026</a></td><td>No 2021 reference claimed as selected-date flood; impacts unavailable ≠ zero</td></tr>
+<tr><td><input type="checkbox"></td><td>Current date</td><td><a href="/?udate=2026-11-06" target="_blank">6 November 2026</a></td><td>Truthful unavailable state; pressing Apply goes to Outlook; opening URL directly stays in GeoOps</td></tr>
+<tr><td><input type="checkbox"></td><td>Weather</td><td><a href="/weather.html?udate=2016-06-04" target="_blank">Weather & Basin</a></td><td>Correct date; normal navigation works; Open appropriate view button</td></tr>
+<tr><td><input type="checkbox"></td><td>Time</td><td><a href="/time.html?udate=2016-06-04" target="_blank">Time & Events</a></td><td>Daily record not represented as hourly hydraulic simulation</td></tr>
+<tr><td><input type="checkbox"></td><td>History</td><td><a href="/history.html?event=EV2021_JUL&amp;udate=2021-07-22" target="_blank">2021 historical replay</a></td><td>18 native frames; 2021 → 2022 event click remains on 2022</td></tr>
+<tr><td><input type="checkbox"></td><td>History</td><td><a href="/history.html?event=EV2022_JUL&amp;udate=2022-07-12" target="_blank">2022 historical replay</a></td><td>1245 frames, correct event/timestamps</td></tr>
+<tr><td><input type="checkbox"></td><td>History</td><td><a href="/history.html?event=EV2023_JUL&amp;udate=2023-07-19" target="_blank">2023 historical replay</a></td><td>1053 frames, correct event/timestamps</td></tr>
+<tr><td><input type="checkbox"></td><td>History</td><td><a href="/history.html?event=EV2024_JUL&amp;udate=2024-07-14" target="_blank">2024 historical replay</a></td><td>1149 frames, correct event/timestamps</td></tr>
+<tr><td><input type="checkbox"></td><td>H3</td><td><a href="/hindcast.html?udate=2024-07-14" target="_blank">H3 Hindcast</a></td><td>2024 independent validation stated honestly</td></tr>
+<tr><td><input type="checkbox"></td><td>Outlook</td><td><a href="/outlook.html?udate=2026-11-06&amp;h=3" target="_blank">+3 h scenario</a></td><td>Unconditioned scenario labels; clear colors; click shallow/deep cells and orange assets</td></tr>
+<tr><td><input type="checkbox"></td><td>Outlook</td><td><a href="/outlook.html?udate=2026-11-06&amp;h=72" target="_blank">+72 h scenario</a></td><td>Not a current rainfall-conditioned flood prediction; legend and inspector follow horizon</td></tr>
+<tr><td><input type="checkbox"></td><td>Routing</td><td>Test the Open appropriate view control on each of six pages</td><td>Registered event → native replay; non-event past → GeoOps; today/future → Outlook</td></tr>
+<tr><td><input type="checkbox"></td><td>Back/Forward</td><td>After two explicit route clicks, use browser Back and Forward</td><td>No unexpected re-redirect or stale selection</td></tr>
+</table>
+<h2>Scientific gates still pending</h2><p>Actual rainfall-conditioned future depth and recession; robust historical cross-date input/output comparison; all-year daily playback; offline basemap; cold-start supervisor. This UI gate does not certify them.</p>
+</html>

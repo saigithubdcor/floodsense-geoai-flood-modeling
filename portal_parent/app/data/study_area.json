@@ -1,0 +1,19 @@
+{
+  "bounds": {
+    "center_lat": 17.543388972918315,
+    "center_lon": 73.50140720870118,
+    "east": 73.54904669365703,
+    "north": 17.56946846140574,
+    "south": 17.517309484430886,
+    "west": 73.45376772374532
+  },
+  "browser_crs": "EPSG:4326",
+  "country": "India",
+  "global_architecture": true,
+  "id": "VASHISHTI_CHIPLUN",
+  "model_coverage": "AVAILABLE",
+  "model_crs": "EPSG:32643",
+  "name": "Vashishti - Chiplun",
+  "outside_configured_area": "NO_FLOODSENSE_MODEL_COVERAGE",
+  "state": "Maharashtra"
+}

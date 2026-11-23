@@ -1,0 +1,488 @@
+:root{--ink:#0f2438;--muted:#607489;--line:#d7e1eb;--blue:#1769e0;--green:#1f8a59;--amber:#a86d00;--card:#fff;--shadow:0 14px 42px rgba(19,42,66,.18)}*{box-sizing:border-box}html,body,#app{height:100%;margin:0}body{font:14px Inter,Segoe UI,Arial,sans-serif;color:var(--ink);background:#e8eef4;overflow:hidden}button,select,input{font:inherit}#boot{height:100%;display:grid;place-items:center;color:var(--muted)}header{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:22px;padding:0 18px;position:relative;z-index:20}.brand{min-width:250px}.brand b{display:block;font-size:19px}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.area{display:flex;align-items:end;gap:8px;flex:1}.area label,.controls label,.time label{font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.area select,.controls select,.time input{display:block;margin-top:4px;border:1px solid #c6d3df;background:#fff;border-radius:9px;padding:8px 10px;color:var(--ink)}button{border:1px solid #c8d4df;background:#fff;border-radius:9px;padding:8px 10px;color:var(--ink);cursor:pointer}button:hover{background:#f2f7fd;border-color:#94b8e7}.status{display:flex;gap:7px}.status span{border:1px solid var(--line);border-radius:20px;padding:8px 10px;font-size:10px;background:#f8fafc}.status .good{color:var(--green);background:#f1fbf6;border-color:#bee2cf}.status .warn{color:#8a6200;background:#fff8e5;border-color:#ead7a4}.body{height:calc(100% - 68px);display:grid;grid-template-columns:92px 1fr}.body nav{background:#fff;border-right:1px solid var(--line);padding:12px 8px;display:flex;flex-direction:column;gap:6px;z-index:10}.body nav button{border:0;background:transparent;font-size:10px;padding:10px 4px;color:#5d7186}.body nav button.active,.body nav button:hover:not(.future){background:#eaf3ff;color:#155cc3}.body nav .future{opacity:.45;cursor:help}.body nav hr{border:0;border-top:1px solid var(--line);width:100%}main{position:relative;min-width:0;min-height:0;overflow:hidden}#map{position:absolute;inset:0;background:#dce5ec}.hero,.controls,.time,.stats,.legend,#drawer,.boundary{position:absolute;z-index:5}.hero{left:20px;top:18px;width:440px;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:15px;padding:14px 16px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}.hero small{font-size:9px;color:#5f7890;font-weight:800;letter-spacing:.12em}.hero h1{font-size:28px;margin:3px 0 5px}.hero p{margin:0;color:var(--muted);line-height:1.45}.hero>div{display:flex;gap:6px;margin-top:10px}.hero span{border-radius:12px;padding:5px 7px;background:#eaf3ff;color:#1c5aa8;font-size:9px;font-weight:800}.hero .warn{background:#fff3d3;color:#886000}.controls{right:18px;top:18px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;gap:8px;align-items:end;box-shadow:var(--shadow)}.controls select{min-width:135px}.time{left:20px;bottom:20px;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;padding:11px 12px;box-shadow:var(--shadow);display:grid;grid-template-columns:195px minmax(230px,1fr) auto auto;align-items:center;gap:12px;max-width:calc(100% - 380px)}.time>div>b{display:block;font-size:11px}.time>div>span{display:block;color:var(--muted);font-size:9px;line-height:1.4;margin-top:3px}#horizons{display:flex;gap:3px}#horizons button{font-size:9px;padding:7px}#horizons button.active{background:var(--blue);border-color:var(--blue);color:#fff}.stats{left:20px;top:175px;display:flex;gap:7px}.stats article{width:135px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:11px;padding:9px 10px;box-shadow:0 8px 24px rgba(19,42,66,.1)}.stats small{display:block;color:var(--muted);font-size:9px}.stats b{display:block;font-size:18px;margin:3px 0}.stats span{font-size:8px;color:#7b8da0}.legend{right:18px;bottom:20px;width:330px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:13px;padding:11px 12px;box-shadow:var(--shadow)}.legend>div{display:flex;justify-content:space-between}.legend>i{display:block;height:9px;border-radius:5px;background:linear-gradient(90deg,#214fb2,#19bbc6,#f0d151,#eb6554);margin:8px 0 4px}.legend span,.legend small{font-size:10px;color:var(--muted)}.legend small{display:block;margin-top:6px}.boundary{left:20px;bottom:128px;background:#fff5d8;border:1px solid #e8d09a;color:#785a17;border-radius:10px;padding:8px 10px;font-size:10px}#drawer{right:18px;top:18px;width:390px;max-height:calc(100% - 36px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:14px;transform:translateX(calc(100% + 40px));transition:.22s}#drawer.open{transform:none}.dhead{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}.dhead small{font-size:9px;color:var(--muted);font-weight:800}.dhead h2{margin:2px 0;font-size:19px}.metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric,.plainbox{border:1px solid var(--line);border-radius:10px;padding:9px;background:#f8fafc}.metric small,.plainbox span{display:block;color:var(--muted);font-size:10px;margin-bottom:3px}.hrow{display:grid;grid-template-columns:52px 1fr 1fr 1fr;gap:5px;padding:7px 0;border-bottom:1px solid #edf1f5;font-size:10px}.hrow span:first-child{color:var(--blue);font-weight:800}.maplibregl-popup-content{border-radius:10px!important;box-shadow:var(--shadow)!important}.maplibregl-ctrl-attrib{font-size:9px!important}@media(max-width:1250px){.controls{top:170px;left:20px;right:auto}.stats{top:260px}.time{right:20px;max-width:calc(100% - 40px);grid-template-columns:180px 1fr auto}.legend{bottom:130px}.boundary{display:none}}@media(max-width:850px){header{height:auto;min-height:68px;flex-wrap:wrap;padding:10px}.area{order:3;width:100%;overflow:auto}.body{height:calc(100vh - 120px);grid-template-columns:60px 1fr}.body nav button{font-size:0}.body nav button:before{content:'FS';font-size:9px}.hero{max-width:74%}.controls{display:grid;grid-template-columns:1fr 1fr;max-width:calc(100% - 40px)}.stats{display:none}.time{grid-template-columns:1fr}.legend{display:none}#drawer{width:calc(100% - 90px)}}
+
+
+/* ========================================================================
+   B2M_B2_FINAL_GEOOPS_LAYOUT_V1
+   ======================================================================== */
+
+
+/*
+  Desktop:
+  controls occupy the upper-right slot.
+  The information drawer gets a dedicated slot BELOW them.
+*/
+
+@media (min-width:1251px){
+
+  #drawer{
+    top:84px !important;
+    right:18px !important;
+
+    max-height:
+      calc(
+        100% - 104px
+      ) !important;
+  }
+}
+
+
+/*
+  The existing <=1250 layout moves controls to the left.
+  The drawer can therefore reclaim its normal top-right position.
+*/
+
+@media (max-width:1250px){
+
+  #drawer{
+    top:18px !important;
+
+    max-height:
+      calc(
+        100% - 36px
+      ) !important;
+  }
+}
+
+
+#drawer{
+  z-index:12 !important;
+}
+
+
+.controls{
+  z-index:10 !important;
+}
+
+
+.dhead{
+  gap:12px;
+  align-items:flex-start;
+}
+
+
+.dhead > div{
+  min-width:0;
+  flex:1;
+}
+
+
+.dhead small{
+  display:block;
+  margin-bottom:3px;
+}
+
+
+.dhead h2{
+  margin:0;
+  line-height:1.15;
+}
+
+
+#dbody .plainbox{
+  margin-bottom:8px;
+}
+
+
+#dbody .plainbox:last-child{
+  margin-bottom:0;
+}
+
+
+.source-state-card b,
+.run-state-card b{
+  display:block;
+  margin-bottom:4px;
+}
+
+
+.state-friendly{
+  display:block !important;
+
+  color:#39546b !important;
+
+  font-size:11px !important;
+
+  line-height:1.35 !important;
+
+  margin-bottom:5px !important;
+}
+
+
+.state-raw{
+  display:block;
+
+  color:#75889a;
+
+  font-size:8.5px;
+
+  line-height:1.25;
+
+  overflow-wrap:anywhere;
+}
+
+
+.state-blocked{
+  border-left:
+    3px solid #c88b19 !important;
+
+  background:
+    #fffaf0 !important;
+}
+
+
+.state-info{
+  border-left:
+    3px solid #4e81bd !important;
+}
+
+
+.run-state-card{
+  border-left:
+    3px solid #4e81bd !important;
+}
+
+
+/*
+  Harmonize cross-portal links with the existing
+  left-hand FloodSense navigation.
+*/
+
+.body nav a{
+
+  display:block;
+
+  width:100%;
+
+  padding:8px 5px;
+
+  border-radius:7px;
+
+  color:#536b82 !important;
+
+  background:transparent;
+
+  text-align:left;
+
+  font-size:10px;
+
+  line-height:1.15;
+
+  font-weight:600;
+
+  text-decoration:none !important;
+
+  overflow-wrap:anywhere;
+}
+
+
+.body nav a:hover,
+.body nav a:focus-visible{
+
+  color:#155cc3 !important;
+
+  background:#eaf3ff;
+
+  outline:none;
+}
+
+
+/*
+  Slightly quieter coverage frame.
+  It remains visible, but does not compete with the
+  hydraulic field.
+*/
+
+
+/* ================================================================
+   B2M_B3_COLLISION_FREE_LAYOUT_V1
+   ================================================================ */
+
+
+/*
+  Smooth only geometry changes.
+  No animation is applied to hydraulic values.
+*/
+
+.stats,
+#drawer{
+  transition:
+    top .12s ease,
+    transform .22s;
+}
+
+
+/*
+  MapLibre controls must never occupy the same
+  bottom-right space as the FloodSense hydraulic legend.
+*/
+
+.maplibregl-ctrl-bottom-right{
+
+  bottom:
+    var(
+      --b2m-map-control-bottom,
+      130px
+    ) !important;
+
+  right:
+    6px !important;
+
+  z-index:
+    8 !important;
+}
+
+
+/*
+  Keep the model legend above the map itself but below
+  drawers/tooling.
+*/
+
+.legend{
+  z-index:
+    9 !important;
+}
+
+
+/*
+  Preserve breathing room around the hero badge row.
+*/
+
+.hero > div{
+  position:relative;
+  z-index:2;
+}
+
+
+/*
+  Statistics remain separate from the hero. Their actual
+  vertical position is managed from rendered hero height.
+*/
+
+.stats{
+  z-index:8 !important;
+}
+
+
+/*
+  Desktop source/run/cell drawer remains below controls.
+*/
+
+#drawer{
+  z-index:12 !important;
+}
+
+
+/*
+  At very small widths the legend is intentionally hidden
+  by the existing responsive contract, therefore MapLibre
+  controls return to the normal bottom edge.
+*/
+
+@media(max-width:850px){
+
+  .maplibregl-ctrl-bottom-right{
+    bottom:
+      8px !important;
+  }
+}
+
+
+
+
+/* B1M3-R1R3 presentation-only. Keeps scientific payloads unchanged. */
+#app .body{height:calc(100% - 110px)!important;}
+#floodsense-r5-statebar{min-height:42px;flex-wrap:wrap;row-gap:4px;font-size:12px!important;}
+#app .body main #floodsense-r5-root{position:absolute;z-index:8;left:20px;bottom:150px;max-width:410px;margin:0;padding:10px 12px;max-height:170px;overflow:auto;font-size:11px;}
+#floodsense-b1m3-impact-panel{position:absolute;right:18px;top:95px;width:min(370px,38%);max-height:calc(100% - 275px);min-height:64px;overflow:auto;z-index:10;background:rgba(255,255,255,.98);box-shadow:0 7px 28px rgba(16,38,58,.18);border:1px solid #cddce8;border-radius:12px;padding:0;color:#10263a;font:12px/1.4 Inter,Segoe UI,Arial,sans-serif;}
+.b1m3-dock-head{padding:11px 12px;background:#f3f8fd;border-bottom:1px solid #dbe5ee;display:flex;justify-content:space-between;gap:12px;align-items:center;}
+.b1m3-dock-head strong{font-size:14px;display:block}.b1m3-sub{font-size:10px;color:#5d7186;line-height:1.35}
+.b1m3-expand{border:1px solid #c9d8e8;border-radius:7px;padding:5px 8px;background:#fff;color:#205998;font-size:11px;white-space:nowrap}
+.b1m3-dock-body{padding:10px 12px}
+.b1m3-dock-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:10px}
+.b1m3-dock-stat{border:1px solid #e0e9f2;border-radius:7px;background:#f8fafc;padding:7px;min-width:0}
+.b1m3-dock-stat small{display:block;font-size:9px;color:#607489}.b1m3-dock-stat b{font-size:15px}
+.b1m3-search{display:flex;gap:6px}.b1m3-search input,.b1m3-search select{min-width:0;width:100%;font-size:12px;padding:7px;border:1px solid #cbd9e5;border-radius:7px;background:#fff}
+.b1m3-asset-list{margin-top:8px;max-height:210px;overflow:auto;display:grid;gap:4px}.b1m3-asset-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;padding:8px;border:1px solid #dce6ef;border-radius:8px;background:#fff;cursor:pointer;font-size:11px;color:#19354d}.b1m3-asset-row:hover,.b1m3-asset-row:focus{background:#eaf3ff;outline:2px solid #9bc6ef;outline-offset:0}.b1m3-asset-row b{font-size:11px;display:block;overflow-wrap:anywhere}.b1m3-asset-row small{font-size:9px;color:#637b90;display:block}.b1m3-asset-row .depth{font-size:12px;font-weight:800;color:#205c96;white-space:nowrap}
+.b1m3-impact-disclaimer{font-size:10px;color:#725722;margin-top:9px;border-top:1px solid #e6edf4;padding-top:7px}
+#floodsense-b1m3-inspector{border:1px solid #a7c5e1;background:#f5faff;border-radius:9px;padding:9px 10px;margin:8px 0;font-size:11px;overflow-wrap:anywhere}
+#floodsense-b1m3-inspector button{float:right}
+@media(max-width:1250px){#floodsense-b1m3-impact-panel{top:270px;max-height:calc(100% - 445px);width:min(380px,46%)}#app .body main #floodsense-r5-root{display:none}}
+@media(max-width:850px){#floodsense-b1m3-impact-panel{right:8px;top:180px;width:min(340px,80%);max-height:calc(100% - 300px)}#app .body{height:calc(100vh - 165px)!important}}
+
+/* B1M3-R1R4 visual-only cohesion; no science or native renderer mutation. */
+body.fs-r1r4-historical #app .legend{display:none!important}
+body.fs-r1r4-historical #floodsense-r5-root{min-height:74px;max-width:540px!important;max-height:170px;bottom:27px!important;left:20px!important;padding:12px 14px!important;font-size:12px!important;box-shadow:0 10px 30px #17324d26}
+body.fs-r1r4-historical #floodsense-r5-root b{font-size:13px}
+#floodsense-b1m3-impact-panel{max-height:calc(100% - 155px)!important}
+#b1m3-asset-list .b1m3-asset-row.fs-r1r4-selected{background:#e6f1ff;border-color:#4284d3;box-shadow:inset 3px 0 #1769e0}
+.fs-r1r4-map-selection{position:absolute;z-index:25;transform:translate(-50%,-100%);width:250px;max-width:min(280px,70vw);padding:11px 34px 11px 12px;background:#fff;border:1px solid #91adcf;box-shadow:0 8px 25px #16314b40;border-radius:10px;font:12px/1.42 Segoe UI,Arial,sans-serif;color:#18364e;pointer-events:auto}
+.fs-r1r4-map-selection:after{position:absolute;content:'';left:calc(50% - 6px);bottom:-7px;width:12px;height:12px;background:#fff;transform:rotate(45deg);border-right:1px solid #91adcf;border-bottom:1px solid #91adcf}
+.fs-r1r4-map-selection strong{display:block;font-size:13px;margin-bottom:3px}
+.fs-r1r4-map-selection small{display:block;font-size:10px;line-height:1.35;color:#607489;margin-top:5px}
+.fs-r1r4-map-selection button{position:absolute;right:5px;top:5px;padding:0;width:24px;height:24px;min-height:0;border:0;border-radius:5px;background:#eef4fa;font-size:17px;line-height:22px}
+@media(max-width:1100px){body.fs-r1r4-historical #floodsense-r5-root{max-width:360px!important;left:10px!important;bottom:60px!important}#floodsense-b1m3-impact-panel{right:10px!important;width:min(330px,42%)!important}}
+@media(max-width:720px){body.fs-r1r4-historical #floodsense-r5-root{max-width:calc(100% - 25px)!important;bottom:50px!important;max-height:130px}#floodsense-b1m3-impact-panel{top:130px!important;width:min(340px,85%)!important}}
+
+/* B1M3-R1R5: root-mapped historic display only. One truthful depth legend, never clipped. */
+body.fs-r1r4-historical #floodsense-r5-reference {display:none!important}
+body.fs-r1r4-historical #app .body main #floodsense-r5-root {
+  display:block!important; position:fixed!important; left:78px!important; top:auto!important;
+  bottom:26px!important; width:min(490px,calc(100vw - 550px))!important;
+  max-width:490px!important; max-height:min(154px,30vh)!important;
+  min-height:0!important; overflow-y:auto!important; overflow-x:hidden!important;
+  box-sizing:border-box!important; z-index:40!important;
+  background:rgba(255,255,255,.98)!important; font-size:12px!important;
+  border:1px solid #afc6da!important; box-shadow:0 10px 25px rgba(20,45,75,.21)!important;
+}
+body.fs-r1r4-historical #app .body main #floodsense-r5-root div{overflow-wrap:anywhere}
+/* One historical depth legend only. The R1R4 card contains the selected-date scale; native forecast legend stays off. */
+body.fs-r1r4-historical #app .legend {display:none!important}
+body.fs-r1r4-historical #app .boundary {bottom:9px!important;left:20px!important;max-width:min(520px,70vw)!important;z-index:11!important}
+/* Impact dock: readable labels, scrolling within dock, not under viewport edge. */
+body.fs-r1r4-historical #floodsense-b1m3-impact-panel {
+ width:clamp(315px,27vw,410px)!important;max-height:min(67vh,calc(100% - 100px))!important;
+ top:50px!important;right:14px!important;overflow-y:auto!important;z-index:30!important;
+}
+body.fs-r1r4-historical .b1m3-dock-head strong{font-size:14px!important}
+body.fs-r1r4-historical .b1m3-asset-row{min-height:42px!important}
+body.fs-r1r4-historical .b1m3-asset-row b{font-size:12px!important;line-height:1.3!important}
+body.fs-r1r4-historical .b1m3-asset-row small{font-size:10px!important}
+body.fs-r1r4-historical .b1m3-dock-stat small{font-size:10px!important}
+body.fs-r1r4-historical .b1m3-impact-disclaimer{font-size:10px!important}
+/* Outlook-style high-contrast selected badge at the selected map coordinate popup. */
+.fs-r1r4-map-selection:before {
+ content:'SELECTED'; position:absolute;top:-23px;left:50%;transform:translateX(-50%);
+ border-radius:5px;padding:3px 8px;background:#122134;color:#fff;
+ font:800 10px/1.2 Segoe UI,Arial,sans-serif;letter-spacing:.04em;
+ box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;
+}
+.fs-r1r4-map-selection{z-index:45!important}
+@media (max-width:1050px){
+ body.fs-r1r4-historical #app .body main #floodsense-r5-root {left:66px!important;bottom:22px!important;width:min(390px,calc(100vw - 410px))!important}
+ body.fs-r1r4-historical #floodsense-b1m3-impact-panel{width:min(340px,42vw)!important}
+}
+@media (max-width:760px){
+ body.fs-r1r4-historical #app .body main #floodsense-r5-root {left:68px!important;bottom:12px!important;max-height:110px!important;width:calc(100vw - 90px)!important}
+ body.fs-r1r4-historical #floodsense-b1m3-impact-panel {width:min(330px,72vw)!important;right:8px!important;max-height:46vh!important;top:45px!important}
+ body.fs-r1r4-historical #app .boundary {display:none!important}
+}
+
+/* R1R6: same MapLibre/OSM portal. Only historical Geographic Operations chrome. */
+body.fs-r1r4-historical #app .body main .time,
+body.fs-r1r4-historical #app .body main .controls,
+body.fs-r1r4-historical #app .body main .boundary {display:none!important}
+/* Existing stats are located at native main top ~175 px; this card is deliberately BELOW them,
+   never over the lower-left forecast controls or the Chiplun wet-cell corridor. */
+body.fs-r1r4-historical #app .body main #floodsense-r5-root{
+ position:absolute!important;top:256px!important;bottom:auto!important;left:18px!important;
+ width:min(424px,calc(100% - 470px))!important;max-width:424px!important;
+ max-height:142px!important;min-height:0!important;padding:10px 12px!important;
+ overflow:auto!important;z-index:10!important;border:1px solid #b8cddd!important;
+ background:rgba(255,255,255,.97)!important;box-shadow:0 7px 24px #102d4923!important;
+ border-radius:11px!important; font-size:12px!important;line-height:1.36!important
+}
+body.fs-r1r4-historical #app .body main #floodsense-r5-root b{font-size:12px!important}
+body.fs-r1r4-historical #app .legend{display:none!important}
+/* Outlook-style selected badge and very short map tag; all text details stay in right inspector. */
+body.fs-r1r4-historical .fs-r1r4-map-selection{
+ width:auto!important;min-width:76px!important;max-width:155px!important;
+ padding:6px 8px!important;border-radius:8px!important;
+ background:#15212f!important;border:2px solid #fff!important;color:#fff!important;
+ transform:translate(-50%,-128%)!important;z-index:34!important;
+ pointer-events:none!important;box-shadow:0 3px 12px #0005!important;
+ text-align:center!important;line-height:1.2!important
+}
+body.fs-r1r4-historical .fs-r1r4-map-selection strong{
+ display:block!important;font-size:10px!important;line-height:1.25!important;
+ font-weight:750!important;max-width:136px!important;
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ margin:0!important;color:white!important
+}
+body.fs-r1r4-historical .fs-r1r4-map-selection > div,
+body.fs-r1r4-historical .fs-r1r4-map-selection > small,
+body.fs-r1r4-historical .fs-r1r4-map-selection > button {display:none!important}
+body.fs-r1r4-historical .fs-r1r4-map-selection:before{
+ content:'SELECTED'!important;position:static!important;display:block!important;
+ transform:none!important;border-radius:0!important;background:none!important;
+ box-shadow:none!important;color:#ffdd72!important;font-size:8px!important;
+ padding:0 0 3px!important;letter-spacing:.08em!important
+}
+body.fs-r1r4-historical .fs-r1r4-map-selection:after{display:none!important}
+/* Inspectable grouped road records: one compact row per proximity label, original IDs expandable. */
+body.fs-r1r4-historical .b1m3-road-group{border:1px solid #d3e1ed;border-radius:9px;background:#f8fbff;padding:0 0 4px;min-width:0}
+body.fs-r1r4-historical .b1m3-road-group summary{cursor:pointer;display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 8px;list-style:revert}
+body.fs-r1r4-historical .b1m3-road-group summary b{display:block;font-size:12px;line-height:1.3;overflow-wrap:anywhere}
+body.fs-r1r4-historical .b1m3-road-group summary small{display:block;color:#64748b;font-size:10px;line-height:1.3;margin-top:3px}
+body.fs-r1r4-historical .b1m3-road-group summary .depth{font-size:11px;font-weight:800;color:#225d8f;white-space:nowrap}
+body.fs-r1r4-historical .b1m3-group-meta{font-size:10px;color:#5e7184;padding:1px 10px 7px;line-height:1.4}
+body.fs-r1r4-historical .b1m3-road-group .b1m3-asset-row{width:calc(100% - 12px);margin:3px 6px;background:#fff}
+body.fs-r1r4-historical #floodsense-b1m3-impact-panel{right:12px!important;top:48px!important;width:min(365px,30%)!important;max-height:calc(100% - 65px)!important;overflow-y:auto!important;z-index:25!important}
+body.fs-r1r4-historical #b1m3-asset-list{max-height:min(300px,42vh)!important;overflow-y:auto!important}
+body.fs-r1r4-historical #b1m3-r1r6-name-note{font-size:10px!important;line-height:1.4!important;margin:7px 1px 0!important}
+@media(max-width:1180px){
+ body.fs-r1r4-historical #app .body main #floodsense-r5-root{top:255px!important;left:12px!important;width:min(320px,calc(100% - 370px))!important;max-height:115px!important}
+ body.fs-r1r4-historical #floodsense-b1m3-impact-panel{width:min(335px,39%)!important}
+}
+@media(max-width:850px){
+ body.fs-r1r4-historical #app .body main #floodsense-r5-root{top:auto!important;bottom:12px!important;left:8px!important;width:calc(100% - 24px)!important;max-width:350px!important;max-height:80px!important}
+ body.fs-r1r4-historical #floodsense-b1m3-impact-panel{top:10px!important;width:min(320px,55%)!important;right:8px!important;max-height:48vh!important}
+}
+
+/* B1M3-R1R7: historical GeoOps only; no native renderer or map layer changes. */
+body.fs-r1r4-historical #app .body main #floodsense-r5-root{
+  box-sizing:border-box!important;overflow-x:hidden!important;overflow-y:auto!important;
+  min-height:0!important;max-height:112px!important;border-radius:10px!important;
+  padding:10px 12px!important;box-shadow:0 7px 22px rgba(17,43,70,.18)!important;
+  line-height:1.38!important;background:rgba(255,255,255,.97)!important;
+}
+/* Very small in-map selected tag. Full name and depth remain in the right inspector. */
+body.fs-r1r4-historical .fs-r1r4-map-selection{
+  max-width:94px!important;min-width:76px!important;width:82px!important;
+  padding:4px 6px!important;transform:translate(-50%,-133%)!important;
+  border-radius:7px!important;background:#132c42!important;
+  border:1.5px solid #fff!important;box-shadow:0 2px 8px #001b3266!important;
+  pointer-events:none!important;
+}
+body.fs-r1r4-historical .fs-r1r4-map-selection:before{
+  content:'SELECTED'!important;display:block!important;position:static!important;
+  background:transparent!important;box-shadow:none!important;transform:none!important;
+  font-size:9px!important;color:#ffe093!important;letter-spacing:.06em!important;
+  padding:1px 0!important;
+}
+body.fs-r1r4-historical .fs-r1r4-map-selection strong,
+body.fs-r1r4-historical .fs-r1r4-map-selection > div,
+body.fs-r1r4-historical .fs-r1r4-map-selection > small,
+body.fs-r1r4-historical .fs-r1r4-map-selection > button{display:none!important}
+body.fs-r1r4-historical #floodsense-b1m3-impact-panel{
+  top:35px!important;max-height:calc(100% - 48px)!important;
+  overflow-y:auto!important;
+}
+body.fs-r1r4-historical #floodsense-b1m3-inspector{font-size:12px!important}
+body.fs-r1r4-historical .b1m3-asset-row:focus-visible{outline:2px solid #2563eb;outline-offset:1px}
+body.fs-r1r4-historical .b1m3-method-details{margin-top:8px;border-top:1px solid #dbe5ed;padding-top:5px;font-size:11px}
+body.fs-r1r4-historical .b1m3-method-details summary{cursor:pointer;color:#365a76;font-weight:700;padding:5px 0}
+body.fs-r1r4-historical .b1m3-method-details .b1m3-impact-disclaimer{border:0;margin:0;padding:3px 0 0}
+/* Map state is day-level. Hide misleading native forecast-only timeline in historical mode. */
+body.fs-r1r4-historical #app .body main .time{display:none!important}
+@media(max-width:850px){
+ body.fs-r1r4-historical #floodsense-b1m3-impact-panel{max-height:42vh!important}
+ body.fs-r1r4-historical #app .body main #floodsense-r5-root{max-height:90px!important}
+}
+
+/* B1M3-R1R8: small dock-only camera controls; no overlay on hydraulic cells. */
+body.fs-r1r4-historical #fs-r1r8-back,
+body.fs-r1r4-historical .fs-r1r8-group-focus{
+ display:block; width:100%; padding:8px 10px; margin:6px 0 8px;
+ border:1px solid #b8d1e8; border-radius:7px; background:#f1f7ff;
+ color:#164571; font:600 12px/1.3 system-ui,Segoe UI,sans-serif;
+ text-align:center; cursor:pointer;
+}
+body.fs-r1r4-historical #fs-r1r8-back:focus-visible,
+body.fs-r1r4-historical .fs-r1r8-group-focus:focus-visible{outline:2px solid #166fe5;outline-offset:2px}
+body.fs-r1r4-historical .fs-r1r8-group-focus{font-size:11px;background:#fff;padding:5px 8px}
+
+/* B1M3-R1R9: compact visual legend mode switch; accepted R1R8 layout retained. */
+.fs-r1r9-depth-choice select {max-width:118px;min-width:96px;font:10px Segoe UI,Arial,sans-serif;
+  background:#fff;color:#1e293b;border:1px solid #94a3b8;border-radius:4px;padding:2px 3px;}
+#fs-r1r9-legend-end {max-width:210px;white-space:normal;text-align:right;font-weight:600;}
+.fs-r1r9-status {display:block;margin-top:2px;font:9px Segoe UI,Arial,sans-serif;color:#475569;}

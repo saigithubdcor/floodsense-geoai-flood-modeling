@@ -1,0 +1,29 @@
+{
+    "phase":  "FS_V432_SAFE_IMPACT_REFRESH_CANDIDATE",
+    "parent_v43":  "D:\\FloodSense_RUN\\FS_V43_SIXPAGE_CANDIDATE_20261106_153503_726",
+    "file_sha256":  {
+                        "overrides\\history.js":  "B854DC5DF78AC93A65A272019B408CFFE07B6C1F39F70CB9AE74872C197E1CF5",
+                        "overrides\\outlook.js":  "56A7216D751C3D6C1BB78AB52BE9850B67FD507478D8B012679B204F4ACE08CA",
+                        "overrides\\fs-r1r10v3-route.js":  "DB835CCF75BAB16EE6577090386E6DAE376E9F4D17460AC640341FB36B9B9AD2",
+                        "R1R10_V32_MANIFEST.json":  "2CC9232B18CE6C4B8DB5BD8921FFE5A054A47A9E94ADBD11DAF0AA8B0AF94F8A",
+                        "overrides\\fs-v4-review.html":  "7E9CA81977B8DD1901D5DA00305BCA7E8770C7185E094D822FC7BDD05EAD0F20",
+                        "overrides\\outlook.html":  "6EDB5B145AD8C7519453FC5CC38FD8E703ED3B8893CDF2D4AD5B2AFF1C6A089C",
+                        "overrides\\index.html":  "DE10855625D1B59ABA203B51AE720740782D56C0C5655021B493A47C791CDC77",
+                        "overrides\\b1m3-r1r9-depth-scale.js":  "EF9DB8DFDD7068945A03998B3FBB0E2A5B40956BF8E6228D262791F07FEB6AB3",
+                        "gateway_v4.py":  "BE705BE6032B10880C319E1082E9B56982961DEABDE29CCF235CFB3F04A6C070",
+                        "overrides\\styles.css":  "D33FA1EDC3A66A8381C53DD9C8A0DE10B100BCD31FD46356FC11B702F13911E3",
+                        "overrides\\b1m3-r1r7-layout.js":  "F501EC79084F6F2BEE479283A677EC8626CB86F4FD0B0534F01449D27D647F15",
+                        "overrides\\history.html":  "8C961C235D8275695BB7E3CB640D35D76E560DA734DA58906CBDFEF9853EB302",
+                        "overrides\\b1m3-r1r6-label-parity.js":  "B897053090BEDEF7BE98C22F215BE9FEB195D83462A3000FC55B7F9EC68D5E38",
+                        "overrides\\fs-v4-integration.js":  "F117A7A3DF0507C56B9580C5AA570ADB72EC3C5BE1C26759D58117FF1F73A4DC",
+                        "overlay_gateway_r1r10_v3.py":  "E8B767FE07CB7ACF37AA39C97481442639E509948FE9CF43BAE35A8219CA09F0",
+                        "overrides\\b1m3-r1r8-focus.js":  "83F759372CEFABB1C5DB9CC37498870DE07C0C6BE88B7D92B99DCC6F4F64E5F9",
+                        "overrides\\fs-r1r10v3-hit.js":  "BC79DDF97639E81B0A1A778446E329C8CE99DC9ECAD62D1DB321833574DE4295"
+                    },
+    "science_changed":  false,
+    "raw_hydraulics_changed":  false,
+    "full_release_accepted":  false,
+    "scope":  "ONE_OUTLOOK_REFRESH_ACTION_ONLY",
+    "browser_qa":  "PENDING",
+    "offline_qa":  "PENDING"
+}
